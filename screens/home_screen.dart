@@ -7,6 +7,7 @@ import '../services/country_api_service.dart';
 import '../services/api_exception.dart';
 import 'search_screen.dart';
 import 'detail_screen.dart';
+import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -79,6 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Country Explorer'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          //Theme icon
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () => CountryExplorerApp.of(context)?.toggleTheme(),
+            ),
+          
           // Cached badge (bonus)
           if (_apiService.hasCachedData)
             Container(
