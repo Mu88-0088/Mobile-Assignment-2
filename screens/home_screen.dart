@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+//import 'package:cached_network_image/cached_network_image.dart';
 import '../models/country.dart';
 import '../services/country_api_service.dart';
 import '../services/api_exception.dart';
@@ -160,7 +160,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: CachedNetworkImage(
+                        child: Image.network(
+                                country.flagImageUrl,
+                                width: 48,
+                                height: 32,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Icon(Icons.flag, size: 32),
+                              ),
+                        
+                        
+                        
+                        /*CachedNetworkImage(
                           imageUrl: country.flagImageUrl,
                           width: 48,
                           height: 32,
@@ -169,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(width: 48, height: 32),
                           errorWidget: (_, __, ___) =>
                               const Icon(Icons.flag, size: 32),
-                        ),
+                        ),*/
                       ),
                       title: Text(country.commonName),
                       subtitle: Text(country.region),
