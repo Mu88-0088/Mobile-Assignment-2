@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:cached_network_image/cached_network_image.dart';
+import '../main.dart';
 import '../models/country.dart';
 import '../services/country_api_service.dart';
 import '../services/api_exception.dart';
 import 'search_screen.dart';
 import 'detail_screen.dart';
-import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final CountryApiService _apiService = CountryApiService();
   late Future<List<Country>> _countriesFuture;
 
-  // Pagination (bonus)
   static const int _pageSize = 20;
   int _currentPage = 1;
   List<Country> _displayedCountries = [];
@@ -80,13 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Country Explorer'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
-          //Theme icon
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () => CountryExplorerApp.of(context)?.toggleTheme(),
-            ),
-          
-          // Cached badge (bonus)
           if (_apiService.hasCachedData)
             Container(
               margin: const EdgeInsets.only(right: 8),
@@ -96,10 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text(
-                'Cached',
-                style: TextStyle(fontSize: 11, color: Colors.white),
+                  'Cached',
+                  style: TextStyle(fontSize: 11, color: Colors.white),
               ),
             ),
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () => CountryExplorerApp.of(context)?.toggleTheme(),
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () => Navigator.push(
@@ -112,12 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: FutureBuilder<List<Country>>(
         future: _countriesFuture,
         builder: (context, snapshot) {
-          // State 1: Loading
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-
-          // State 2: Error
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -143,13 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           }
-
-          // State 3: No data
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No countries found.'));
           }
-
-          // State 4: Data
           return Column(
             children: [
               Expanded(
@@ -161,25 +149,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: Image.network(
-                                country.flagImageUrl,
-                                width: 48,
-                                height: 32,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(Icons.flag, size: 32),
-                              ),
-                        
-                        
-                        
-                        /*CachedNetworkImage(
-                          imageUrl: country.flagImageUrl,
+                          country.flagImageUrl,
                           width: 48,
                           height: 32,
                           fit: BoxFit.cover,
-                          placeholder: (_, __) =>
-                              const SizedBox(width: 48, height: 32),
-                          errorWidget: (_, __, ___) =>
+                          errorBuilder: (_, __, ___) =>
                               const Icon(Icons.flag, size: 32),
-                        ),*/
+                        ),
                       ),
                       title: Text(country.commonName),
                       subtitle: Text(country.region),
@@ -187,17 +163,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => DetailScreen(
-                            alpha3Code: country.alpha3Code,
-                          ),
+                          builder: (_) =>
+                              DetailScreen(alpha3Code: country.alpha3Code),
                         ),
                       ),
                     );
                   },
                 ),
               ),
-
-              // Load More button (bonus)
               if (_displayedCountries.length < _allCountries.length)
                 Padding(
                   padding: const EdgeInsets.all(12),
